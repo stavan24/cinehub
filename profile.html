@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineTrack - User Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #FF5C5C; /* Red Accent */
+            --color-background: #121212; /* Dark Background */
+            --color-surface: #1E1E1E; /* Darker Surface for cards/sections */
+            --color-text-light: #E0E0E0;
+            --color-text-muted: #A0A0A0;
+            --border-radius-base: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text-light);
+            line-height: 1.6;
+            padding-top: 60px; /* Space for fixed navbar */
+            min-height: 100vh;
+        }
+
+        /* --- Navbar/Header Styling --- */
+        nav{
+            margin-left: 765px;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--color-surface);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px var(--spacing-md);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
+        }
+
+        .nav-links a {
+            color: var(--color-text-light);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: var(--border-radius-base);
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--color-background);
+            background-color: var(--color-primary);
+        }
+
+        /* --- Main Layout --- */
+        .container {
+            max-width: 900px;
+            margin: var(--spacing-lg) auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .section-header {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+
+        /* --- Profile Card Styling --- */
+        .profile-card {
+            background-color: var(--color-surface);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--color-surface);
+            margin-bottom: var(--spacing-md);
+            border: 4px solid var(--color-text-light);
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            font-size: 1rem;
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: var(--spacing-md);
+            border-top: 1px solid #333;
+            padding-top: var(--spacing-md);
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+        
+        /* --- General Button Styling (Re-used) --- */
+        button {
+            padding: 10px 30px;
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            border: none;
+            border-radius: var(--border-radius-base);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #FF8585; /* Lighter red on hover */
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        /* --- Settings/Other Sections --- */
+        .settings-section h3 {
+            font-size: 1.5rem;
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-md);
+            border-left: 4px solid var(--color-primary);
+            padding-left: 10px;
+        }
+        
+        .setting-item {
+            background-color: var(--color-surface);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-base);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .setting-item label {
+            flex-grow: 1;
+        }
+
+        /* Simple Toggle Switch (Optional, but looks good in dark themes) */
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 40px;
+          height: 24px;
+        }
+
+        .switch input { 
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+          border-radius: 24px;
+        }
+
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 16px;
+          width: 16px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+        }
+
+        input:checked + .slider {
+          background-color: var(--color-primary);
+        }
+
+        input:focus + .slider {
+          box-shadow: 0 0 1px var(--color-primary);
+        }
+
+        input:checked + .slider:before {
+          transform: translateX(16px);
+        }
+
+        /* --- Footer (Re-used) --- */
+        .footer {
+            text-align: center;
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--color-surface);
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            margin-top: var(--spacing-lg);
+        }
+
+        /* ... (Existing CSS) ... */
+
+/* --- Profile Card Styling additions for Edit Mode --- */
+
+/* Input Fields for Edit Mode */
+.edit-mode-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin: 5px 0;
+    border: 2px solid var(--color-surface);
+    border-radius: var(--border-radius-base);
+    background-color: #2a2a2a; /* Slightly lighter surface for input */
+    color: var(--color-text-light);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: border-color 0.3s;
+    display: none; /* Hidden by default */
+}
+
+.edit-mode-input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+/* Button Group Styling */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.edit-mode-button {
+    /* Styles for Save/Cancel buttons */
+    padding: 8px 20px; 
+    font-size: 1rem;
+}
+
+.secondary-btn {
+    background-color: var(--color-surface);
+    color: var(--color-text-light);
+    border: 1px solid var(--color-text-muted);
+}
+
+.secondary-btn:hover {
+    background-color: #333;
+}
+
+
+
+.profile-card.edit-mode .display-mode {
+    display: none !important;
+}
+
+
+.profile-card.edit-mode .edit-mode-input {
+    display: block !important;
+}
+.profile-card.edit-mode #saveButton,
+.profile-card.edit-mode #cancelButton {
+    display: inline-block !important;
+}
+
+        /* --- Mobile Responsiveness (Max 768px) --- */
+        @media (max-width: 768px) {
+            
+                 nav{
+            margin-left : -24px;
+        }
+            
+            .navbar-content {
+                flex-direction: column;
+                padding: 10px var(--spacing-md) 15px;
+            }
+
+            .logo {
+                margin-bottom: 10px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .nav-links a {
+                font-size: 0.9rem;
+                padding: 5px 8px;
+            }
+
+            .container {
+                padding: 0 10px;
+            }
+            
+            .section-header {
+                font-size: 1.5rem;
+                margin-top: 100px;
+            }
+
+            .profile-card {
+                padding: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="navbar-content">
+            <a href="index.html" class="logo">CineTrack</a>
+
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="movie.html">Search</a></li>
+                    <li><a href="watchlist.html">Watchlist</a></li>
+                    <li><a href="#" class="active">Profile</a></li>
+                </ul>
+            </nav>
+
+            <div class="search-box">
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1 class="section-header">Your CineTrack Profile</h1>
+
+        <section class="profile-card" id="profileCard">
+            <div class="avatar">
+                JD
+            </div>
+            
+            <form id="profileForm">
+                <p class="profile-name display-mode" id="displayName">Jane Doe</p>
+                <p class="profile-email display-mode" id="displayEmail">jane.doe@example.com</p>
+
+                <input type="text" id="editName" class="edit-mode-input" value="Jane Doe" placeholder="Full Name">
+                <input type="email" id="editEmail" class="edit-mode-input" value="jane.doe@example.com" placeholder="Email Address">
+                
+                <div class="button-group">
+                    <button type="button" id="editButton" class="display-mode">Edit Profile</button>
+                    <button type="submit" id="saveButton" class="edit-mode-button" style="display: none;">Save Changes</button>
+                    <button type="button" id="cancelButton" class="edit-mode-button secondary-btn" style="display: none;">Cancel</button>
+                </div>
+            </form>
+            
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">Watched Movies</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Watchlist Items</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8.4</div>
+                    <div class="stat-label">Avg. Rating</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="settings-section">
+            <h3>Account Settings</h3>
+            
+            <div class="setting-item">
+                <label for="themeToggle">Dark Mode (Default)</label>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <label>Change Password</label>
+                <button style="padding: 5px 15px; font-size: 0.9rem;">Update</button>
+            </div>
+            
+            <div class="setting-item">
+                <label>Notification Emails</label>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <label>Sign Out</label>
+                <button style="background-color: #333; padding: 5px 15px; font-size: 0.9rem;">Sign Out</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        &copy; 2025 CineTrack. All rights reserved. | <a href="#" style="color: var(--color-primary);">Privacy Policy</a>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileCard = document.getElementById('profileCard');
+            const profileForm = document.getElementById('profileForm');
+            const editButton = document.getElementById('editButton');
+            const saveButton = document.getElementById('saveButton');
+            const cancelButton = document.getElementById('cancelButton');
+            
+            const displayName = document.getElementById('displayName');
+            const displayEmail = document.getElementById('displayEmail');
+            const editNameInput = document.getElementById('editName');
+            const editEmailInput = document.getElementById('editEmail');
+
+            
+            const initialName = displayName.textContent;
+            const initialEmail = displayEmail.textContent;
+
+            const toggleEditMode = (isEditing) => {
+                if (isEditing) {
+                    
+                    profileCard.classList.add('edit-mode');
+                    editButton.style.display = 'none';
+                    saveButton.style.display = 'block';
+                    cancelButton.style.display = 'block';
+
+                    
+                    editNameInput.value = displayName.textContent;
+                    editEmailInput.value = displayEmail.textContent;
+                } else {
+                    
+                    profileCard.classList.remove('edit-mode');
+                    editButton.style.display = 'block';
+                    saveButton.style.display = 'none';
+                    cancelButton.style.display = 'none';
+                }
+            };
+
+            
+            editButton.addEventListener('click', () => {
+                toggleEditMode(true);
+            });
+
+            
+            cancelButton.addEventListener('click', () => {
+                
+                editNameInput.value = initialName;
+                editEmailInput.value = initialEmail;
+                toggleEditMode(false);
+            });
+
+            
+            profileForm.addEventListener('submit', (e) => {
+                e.preventDefault(); 
+                
+                const newName = editNameInput.value.trim();
+                const newEmail = editEmailInput.value.trim();
+
+                
+                if (newName === "" || newEmail === "") {
+                    alert("Name and Email cannot be empty.");
+                    return;
+                }
+
+                displayName.textContent = newName;
+                displayEmail.textContent = newEmail;
+                
+                
+                const initials = newName.split(' ').map(n => n[0]).join('').toUpperCase();
+                document.querySelector('.avatar').textContent = initials.substring(0, 2);
+
+                
+                toggleEditMode(false);
+
+              
+                console.log(`Saved: Name=${newName}, Email=${newEmail}`);
+                alert("Profile Updated Successfully!");
+            });
+
+            
+            toggleEditMode(false);
+        });
+    </script>
+</body>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineTrack - Your Movie Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #FF5C5C; /* Red Accent */
+            --color-background: #121212; /* Dark Background */
+            --color-surface: #1E1E1E; /* Darker Surface for cards/sections */
+            --color-text-light: #E0E0E0;
+            --color-text-muted: #A0A0A0;
+            --border-radius-base: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text-light);
+            line-height: 1.6;
+            padding-top: 60px; /* Space for fixed navbar */
+            min-height: 100vh;
+        }
+
+        /* --- Navbar/Header Styling (Unchanged) --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--color-surface);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px var(--spacing-md);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: var(--spacing-md);
+        }
+
+        .nav-links a {
+            color: var(--color-text-light);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: var(--border-radius-base);
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--color-background);
+            background-color: var(--color-primary);
+        }
+
+        /* Search box in Navbar is for global search, but we'll use a main search area now */
+        .search-box {
+            display: none; /* Hide the navbar search box for cleaner look on this version */
+        }
+        
+        /* --- Main Layout --- */
+        .container {
+            max-width: 900px;
+            margin: var(--spacing-lg) auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .section-header {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+        }
+
+        /* --- New Search Area Styling --- */
+        .interactive-search-area {
+            background-color: var(--color-surface);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-base);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .interactive-search-area input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #333;
+            border-radius: var(--border-radius-base);
+            background-color: #282828;
+            color: var(--color-text-light);
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .interactive-search-area input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .interactive-search-area button {
+            padding: 10px 30px;
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            border: none;
+            border-radius: var(--border-radius-base);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .interactive-search-area button:hover {
+            background-color: #FF8585; /* Lighter red on hover */
+        }
+
+        .interactive-search-area button:active {
+            transform: scale(0.98);
+        }
+        
+        /* --- Results Area Styling --- */
+        .movie-results {
+            margin-top: var(--spacing-lg);
+            min-height: 200px; /* Ensure space even when empty */
+        }
+
+        .result-card {
+            background-color: var(--color-surface);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-base);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .result-card h3 {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--color-primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .citations-section {
+            margin-top: var(--spacing-md);
+            border-top: 1px solid #333;
+            padding-top: 10px;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+        
+        .citations-section a {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+        
+        .citations-section a:hover {
+            text-decoration: underline;
+        }
+
+        button {
+            padding: 10px 30px;
+            background-color: var(--color-primary);
+            color: var(--color-surface);
+            border: none;
+            border-radius: var(--border-radius-base);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+         button:hover {
+            background-color: #FF8585; /* Lighter red on hover */
+        }
+
+         button:active {
+            transform: scale(0.98);
+        }
+
+        /* --- Footer (Unchanged) --- */
+        .footer {
+            text-align: center;
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--color-surface);
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            margin-top: var(--spacing-lg);
+        }
+
+        /* --- Mobile Responsiveness (Max 768px) --- */
+        @media (max-width: 768px) {
+            .navbar-content {
+                flex-direction: column;
+                padding: 10px var(--spacing-md) 15px;
+            }
+
+            .logo {
+                margin-bottom: 10px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .nav-links a {
+                font-size: 0.9rem;
+                padding: 5px 8px;
+            }
+
+            .container {
+                padding: 0 10px;
+            }
+            
+            .section-header {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fixed Navigation Bar -->
+    <header class="navbar">
+        <div class="navbar-content">
+            <a href="#" class="logo">CineTrack</a>
+
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#" class="active">Search</a></li>
+                    <li><a href="watchlist.html">Watchlist</a></li>
+                    <li><a href="profile.html">Profile</a></li>
+                </ul>
+            </nav>
+
+            <div class="search-box">
+                <!-- Hidden search box -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="container">
+        <h1 class="section-header">Find Movie Reviews & Info</h1>
+
+        <!-- Interactive Search Area -->
+        <section class="interactive-search-area">
+            <input type="text" id="movieQuery" placeholder="Enter movie title (e.g., Dune: Part Two, Inception)...">
+            <button id="searchButton">Get Review</button>
+        </section>
+
+        <!-- Results Area -->
+        <section class="movie-results">
+            <div id="loadingIndicator" class="loading-spinner"></div>
+            
+            <div id="resultsContainer" class="result-card" style="display: none;">
+                <h3 id="resultTitle"></h3>
+                <div id="resultText"></div>
+                <div id="citations" class="citations-section"></div>
+            </div>
+            
+            <p id="initialMessage" style="text-align: center; color: var(--color-text-muted);">
+                Search for a movie above to get a quick summary and review from the AI.
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+   
+    <script src="movie.js"></script>
+</body>
+</html>
